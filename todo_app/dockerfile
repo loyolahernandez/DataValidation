@@ -16,5 +16,5 @@ EXPOSE 5000
 # Define the environment variable to prevent Python from buffering stdout and stderr
 ENV PYTHONUNBUFFERED=1
 
-# Run the application when the container launches
-CMD ["python", "run.py"]
+# Run the application using gunicorn when the container launches
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--timeout", "120", "run:app"]
