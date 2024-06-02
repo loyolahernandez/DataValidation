@@ -1,0 +1,16 @@
+body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .container {
+    margin-top: 50px;
+  }
+  
+  ul {
+    list-style-type: none;
+  }
+  
+  li {
+    margin: 10px 0;
+  }
+  
