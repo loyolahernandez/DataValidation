@@ -11,6 +11,7 @@ def app():
     with app.app_context():
         db.create_all()
         yield app
+        db.session.rollback()  # Revertir cualquier cambio en la sesión después de cada prueba
         db.drop_all()
 
 @pytest.fixture
@@ -22,9 +23,17 @@ def test_index(client):
     assert response.status_code == 200
 
 def test_add_task(client):
+    with client.application.app_context():
+        # Creamos una instancia de Task y la agregamos a la sesión antes de hacer la solicitud
+        task = Task(title='Test Task')
+        db.session.add(task)
+        db.session.commit()
+
     response = client.post('/add', data={'title': 'Test Task'})
     assert response.status_code == 302  # Redirect after adding task
+
     with client.application.app_context():
+        # Comprobamos si la tarea fue agregada correctamente
         task = Task.query.filter_by(title='Test Task').first()
         assert task is not None
 
